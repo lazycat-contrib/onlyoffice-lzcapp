@@ -1,0 +1,38 @@
+application:
+  subdomain: onlyoffice
+  multi_instance: false
+  # No public_path: DocumentServer is an API/editor service without its own
+  # user-account login (auth is delegated to the integrating app via JWT),
+  # so platform entry authentication stays the first line of defense
+  # (shimmy precedent 2026-11-04).
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://onlyoffice:80/
+services:
+  onlyoffice:
+    # upstream: onlyoffice/documentserver:10.0.0
+    image: docker.1ms.run/onlyoffice/documentserver:10.0.0
+    environment:
+      - TZ=Asia/Shanghai
+      - JWT_ENABLED=true
+      - JWT_SECRET={{ printf "%x" (stable_secret "onlyoffice_jwt") }}
+    binds:
+      - /lzcapp/var/mutdata/data:/var/www/onlyoffice/Data
+      - /lzcapp/var/mutdata/lib:/var/lib/onlyoffice
+usage: |
+  ONLYOFFICE Document Server：在线文档/表格/幻灯片编辑服务，支持协同编辑，
+  常作为 Nextcloud / ownCloud 等网盘的在线编辑后端使用。
+
+  使用方法：
+  1. 打开应用可见欢迎页，确认服务运行正常。
+  2. 在 Nextcloud 等集成端安装 ONLYOFFICE 连接插件，服务器地址填本应用的
+     访问地址，JWT 密钥填安装时生成的密钥（见应用详情中的密钥参数）。
+  3. 编辑器嵌入与 API 调用均需携带 JWT 签名，密钥由系统随机生成并固定。
+
+  说明：
+  - DocumentServer 自身没有账号登录页（鉴权委托给集成方 + JWT），因此本包
+    不使用 public_path，由平台入口鉴权保护，请勿将服务端口额外对外开放。
+  - 本包未做实机验证，功能以官方文档为准：https://helpcenter.onlyoffice.com/
+  - 许可证 AGPL-3.0 随包分发，见 /package-licenses/。

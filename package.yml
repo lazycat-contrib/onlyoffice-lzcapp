@@ -1,0 +1,18 @@
+package: community.lazycat.app.onlyoffice
+name: ONLYOFFICE Docs
+version: 10.0.0
+description: "ONLYOFFICE Document Server: online office suite with collaborative editing of documents, spreadsheets and presentations, compatible with OpenXML formats."
+min_os_version: "1.5.0"
+homepage: https://github.com/ONLYOFFICE/DocumentServer
+author: ONLYOFFICE
+license: "AGPL-3.0"
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: ONLYOFFICE 文档服务
+    description: "ONLYOFFICE 文档服务器：在线办公套件，支持文档/表格/幻灯片的协同编辑，兼容 OpenXML 格式，可为 Nextcloud 等提供在线编辑后端。"
+  en:
+    name: ONLYOFFICE Docs
+    description: "ONLYOFFICE Document Server: collaborative online editing of documents, spreadsheets and presentations; backend for Nextcloud etc."
